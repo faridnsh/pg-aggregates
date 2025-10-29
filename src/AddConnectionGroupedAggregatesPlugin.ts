@@ -125,6 +125,9 @@ const Plugin: GraphileConfig.Plugin = {
         const TableGroupByType = build.getTypeByName(
           inflection.aggregateGroupByType({ resource: table })
         ) as GraphQLEnumType | undefined;
+        const TableGroupedOrderByType = build.getTypeByName(
+          inflection.aggregateGroupedAggregatesOrderByType({ resource: table })
+        ) as GraphQLEnumType | undefined;
         const TableHavingInputType = build.getTypeByName(
           inflection.aggregateHavingInputType({ resource: table })
         ) as GraphQLInputType;
@@ -152,6 +155,75 @@ const Plugin: GraphileConfig.Plugin = {
                     () =>
                       function (_$parent, $pgSelect: PgSelectStep, input) {
                         return input.apply($pgSelect);
+                      },
+                    []
+                  ),
+                },
+                ...(TableGroupedOrderByType && isValidEnum(build, TableGroupedOrderByType)
+                  ? {
+                      orderBy: {
+                        type: new GraphQLList(
+                          new GraphQLNonNull(TableGroupedOrderByType)
+                        ),
+                        description: build.wrapDescription(
+                          `The ordering to apply to the grouped aggregates of \`${tableTypeName}\`.`,
+                          "arg"
+                        ),
+                        applyPlan: EXPORTABLE(
+                          () =>
+                            function (
+                              _$parent,
+                              $pgSelect: PgSelectStep<any>,
+                              input
+                            ) {
+                              return input.apply($pgSelect);
+                            },
+                          []
+                        ),
+                      },
+                    }
+                  : null),
+                first: {
+                  type: build.graphql.GraphQLInt,
+                  description: build.wrapDescription(
+                    "Only include the first `n` grouped aggregates.",
+                    "arg"
+                  ),
+                  applyPlan: EXPORTABLE(
+                    () =>
+                      function (
+                        _$parent,
+                        $pgSelect: PgSelectStep<any>,
+                        arg
+                      ) {
+                        $pgSelect.setFirst(arg.getRaw());
+                      },
+                    []
+                  ),
+                },
+                last: {
+                  type: build.graphql.GraphQLInt,
+                  description: build.wrapDescription(
+                    "Only include the last `n` grouped aggregates.",
+                    "arg"
+                  ),
+                  applyPlan: EXPORTABLE(
+                    () =>
+                      function (
+                        _$parent,
+                        $pgSelect: PgSelectStep<any>,
+                        arg
+                      ) {
+                        const selectAny = $pgSelect as any;
+                        const originalAssert =
+                          selectAny.assertCursorPaginationAllowed;
+                        try {
+                          selectAny.assertCursorPaginationAllowed = () => {};
+                          $pgSelect.setLast(arg.getRaw());
+                        } finally {
+                          selectAny.assertCursorPaginationAllowed =
+                            originalAssert;
+                        }
                       },
                     []
                   ),

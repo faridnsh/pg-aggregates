@@ -271,15 +271,30 @@ See
 [Defining your own grouping derivatives](#defining-your-own-grouping-derivatives)
 below for details on how to add your own grouping derivatives.
 
+The `groupedAggregates` field accepts a few arguments in addition to `groupBy`:
+
+- `orderBy` – controls how groups are sorted. You can order by any aggregate that
+  appears in the grouped output (e.g. `SUM_POINTS_DESC`).  
+- `first` / `last` – slice the ordered groups, returning only the leading or
+  trailing `n` groups.  
+
+Always pair `first` or `last` with an explicit `orderBy` so PostgreSQL can
+deterministically rank the groups before trimming them.
+
 The aggregates supported over groups are the same as over the connection as a
 whole (see [Aggregates](#aggregates) above), but in addition you may also
-determine the `keys` that were used for the aggregate. There will be one key for
-each of the `groupBy` values; for example in this query:
+determine the `keys` that were used for the aggregate, and optionally limit the
+groups returned. There will be one key for each of the `groupBy` values; for
+example in this query:
 
 ```graphql
-query AverageDurationByYearOfRelease {
+query TopTwoYearsByAverageDuration {
   allFilms {
-    groupedAggregates(groupBy: [YEAR_OF_RELEASE]) {
+    groupedAggregates(
+      groupBy: [YEAR_OF_RELEASE]
+      orderBy: [AVERAGE_DURATION_IN_MINUTES_DESC]
+      first: 2
+    ) {
       keys
       average {
         durationInMinutes
@@ -307,6 +322,8 @@ query AverageGoalsOnDaysWithAveragePointsOver200 {
     byDay: groupedAggregates(
       groupBy: [CREATED_AT_TRUNCATED_TO_DAY]
       having: { average: { points: { greaterThan: 200 } } }
+      orderBy: [AVERAGE_GOALS_DESC]
+      last: 3
     ) {
       keys
       average {
@@ -316,6 +333,9 @@ query AverageGoalsOnDaysWithAveragePointsOver200 {
   }
 }
 ```
+
+When using `last`, be sure to supply an `orderBy` so the database can produce a
+deterministic ordering before the tail slice is applied.
 
 ## Defining your own aggregates
 
