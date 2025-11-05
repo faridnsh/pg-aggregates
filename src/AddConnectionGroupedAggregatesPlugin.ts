@@ -1,6 +1,4 @@
-import type {
-  PgSelectStep,
-} from "@dataplan/pg";
+import type { PgSelectStep } from "@dataplan/pg";
 import type {
   GraphQLEnumType,
   GraphQLInputType,
