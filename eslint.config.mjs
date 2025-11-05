@@ -8,7 +8,7 @@ import importPlugin from "eslint-plugin-import";
 import jest from "eslint-plugin-jest";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import tsdoc from "eslint-plugin-tsdoc";
-import graphql from "eslint-plugin-graphql";
+import graphql from "@graphql-eslint/eslint-plugin";
 
 export default tseslint.config(
   {
@@ -33,14 +33,7 @@ export default tseslint.config(
     },
   },
   // Graphile Export plugin recommended config
-  {
-    plugins: {
-      "graphile-export": graphileExport,
-    },
-    rules: {
-      ...graphileExport.configs.recommended.rules,
-    },
-  },
+  graphileExport.configs.recommended,
   prettier,
   {
     files: ["**/*.{js,jsx,ts,tsx}"],

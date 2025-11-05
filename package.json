@@ -54,6 +54,7 @@
     }
   },
   "devDependencies": {
+    "@graphql-eslint/eslint-plugin": "^4.4.0",
     "@localrepo/prettier2-for-jest": "npm:prettier@^2",
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^18.15.11",
@@ -62,7 +63,6 @@
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-graphile-export": "^1.0.0-rc.1",
-    "eslint-plugin-graphql": "^4.0.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jest": "^28.14.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
@@ -85,6 +85,5 @@
   },
   "files": [
     "dist"
-  ],
-  "packageManager": "yarn@1.22.22"
+  ]
 }
