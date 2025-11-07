@@ -537,8 +537,12 @@ COMMENT ON COLUMN my_schema.my_table.my_column IS E'@behavior +attribute:aggrega
 Or enable only specific aggregates for a column (e.g., only SUM and AVERAGE):
 
 ```sql
-COMMENT ON COLUMN my_schema.my_table.my_column IS E'@behavior +sum:attribute:aggregate:groupedAggregates:orderBy +average:attribute:aggregate:groupedAggregates:orderBy';
+COMMENT ON COLUMN my_schema.my_table.my_column IS E'@behavior -attribute:aggregate:groupedAggregates:orderBy +sum:attribute:aggregate:groupedAggregates:orderBy +average:attribute:aggregate:groupedAggregates:orderBy';
 ```
+
+Note: When using per-aggregate behaviors, you must first disable the generic
+`attribute:aggregate:groupedAggregates:orderBy` behavior to prevent all aggregates
+from being enabled.
 
 You also can keep aggregates enabled by default, but disable aggregates for
 specific tables:
