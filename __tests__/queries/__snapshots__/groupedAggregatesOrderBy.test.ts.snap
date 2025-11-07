@@ -3,24 +3,6 @@
 exports[`GroupedAggregatesOrderBy: result 1`] = `
 {
   "allMatchStats": {
-    "bottom": [
-      {
-        "keys": [
-          "1",
-        ],
-        "sum": {
-          "points": "2175",
-        },
-      },
-      {
-        "keys": [
-          "5",
-        ],
-        "sum": {
-          "points": "2834",
-        },
-      },
-    ],
     "top": [
       {
         "keys": [

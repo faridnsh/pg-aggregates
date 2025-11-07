@@ -196,33 +196,6 @@ const Plugin: GraphileConfig.Plugin = {
                     []
                   ),
                 },
-                last: {
-                  type: build.graphql.GraphQLInt,
-                  description: build.wrapDescription(
-                    "Only include the last `n` grouped aggregates.",
-                    "arg"
-                  ),
-                  applyPlan: EXPORTABLE(
-                    () =>
-                      function (
-                        _$parent,
-                        $pgSelect: PgSelectStep<any>,
-                        arg
-                      ) {
-                        const selectAny = $pgSelect as any;
-                        const originalAssert =
-                          selectAny.assertCursorPaginationAllowed;
-                        try {
-                          selectAny.assertCursorPaginationAllowed = () => {};
-                          $pgSelect.setLast(arg.getRaw());
-                        } finally {
-                          selectAny.assertCursorPaginationAllowed =
-                            originalAssert;
-                        }
-                      },
-                    []
-                  ),
-                },
                 ...(TableHavingInputType
                   ? {
                       having: {

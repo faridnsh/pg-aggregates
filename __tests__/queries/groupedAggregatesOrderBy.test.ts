@@ -15,16 +15,6 @@ it(
             points
           }
         }
-        bottom: groupedAggregates(
-          groupBy: [PLAYER_ID]
-          orderBy: [SUM_POINTS_ASC]
-          last: 2
-        ) {
-          keys
-          sum {
-            points
-          }
-        }
       }
     }
   `)

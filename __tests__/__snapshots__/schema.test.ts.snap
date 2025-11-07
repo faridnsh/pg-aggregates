@@ -309,9 +309,6 @@ type FilmConnection {
     """Only include the first \`n\` grouped aggregates."""
     first: Int
 
-    """Only include the last \`n\` grouped aggregates."""
-    last: Int
-
     """Conditions on the grouped aggregates."""
     having: FilmHavingInput
   ): [FilmAggregates!]
@@ -1709,9 +1706,6 @@ type MatchStatConnection {
     """Only include the first \`n\` grouped aggregates."""
     first: Int
 
-    """Only include the last \`n\` grouped aggregates."""
-    last: Int
-
     """Conditions on the grouped aggregates."""
     having: MatchStatHavingInput
   ): [MatchStatAggregates!]
@@ -2744,9 +2738,6 @@ type PlayerConnection {
 
     """Only include the first \`n\` grouped aggregates."""
     first: Int
-
-    """Only include the last \`n\` grouped aggregates."""
-    last: Int
 
     """Conditions on the grouped aggregates."""
     having: PlayerHavingInput
@@ -3795,9 +3786,6 @@ type ViewMatchStatConnection {
 
     """Only include the first \`n\` grouped aggregates."""
     first: Int
-
-    """Only include the last \`n\` grouped aggregates."""
-    last: Int
 
     """Conditions on the grouped aggregates."""
     having: ViewMatchStatHavingInput
