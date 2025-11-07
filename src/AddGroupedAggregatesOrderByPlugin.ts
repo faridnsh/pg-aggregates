@@ -15,6 +15,16 @@ declare global {
     interface BehaviorStrings {
       "resource:groupedAggregates:orderBy": true;
       "attribute:aggregate:groupedAggregates:orderBy": true;
+
+      "sum:attribute:aggregate:groupedAggregates:orderBy": true;
+      "distinctCount:attribute:aggregate:groupedAggregates:orderBy": true;
+      "min:attribute:aggregate:groupedAggregates:orderBy": true;
+      "max:attribute:aggregate:groupedAggregates:orderBy": true;
+      "average:attribute:aggregate:groupedAggregates:orderBy": true;
+      "stddevSample:attribute:aggregate:groupedAggregates:orderBy": true;
+      "stddevPopulation:attribute:aggregate:groupedAggregates:orderBy": true;
+      "varianceSample:attribute:aggregate:groupedAggregates:orderBy": true;
+      "variancePopulation:attribute:aggregate:groupedAggregates:orderBy": true;
     }
     interface ScopeEnum {
       isPgAggregateGroupedOrderByEnum?: boolean;
@@ -23,14 +33,6 @@ declare global {
       isPgAggregateGroupedOrderByEnum?: boolean;
     }
   }
-}
-
-function isSuitableResource(resource: PgResource<any, any, any, any, any>) {
-  return (
-    !resource.parameters &&
-    !!resource.codec.attributes &&
-    !resource.isUnique
-  );
 }
 
 const Plugin: GraphileConfig.Plugin = {
@@ -49,18 +51,15 @@ const Plugin: GraphileConfig.Plugin = {
         },
         "attribute:aggregate:groupedAggregates:orderBy": {
           description:
-            "Should groupedAggregates orderBy options be added for this attribute?",
+            "Should groupedAggregates orderBy options be added for this attribute (for all aggregates)?",
           entities: ["pgCodecAttribute"],
         },
       },
     },
 
     entityBehavior: {
-      pgResource: [
-        "resource:groupedAggregates",
-        "resource:groupedAggregates:orderBy",
-      ],
-      pgCodecAttribute: ["attribute:aggregate:groupedAggregates:orderBy"],
+      pgResource: "-resource:groupedAggregates:orderBy",
+      pgCodecAttribute: "-attribute:aggregate:groupedAggregates:orderBy",
     },
 
     hooks: {
@@ -69,7 +68,11 @@ const Plugin: GraphileConfig.Plugin = {
         for (const resource of Object.values(
           build.input.pgRegistry.pgResources
         )) {
-          if (!isSuitableResource(resource)) {
+          if (
+            resource.parameters ||
+            !resource.codec.attributes ||
+            resource.isUnique
+          ) {
             continue;
           }
           if (
@@ -80,14 +83,9 @@ const Plugin: GraphileConfig.Plugin = {
           ) {
             continue;
           }
-          if (
-            !build.behavior.pgResourceMatches(
-              resource,
-              "resource:groupedAggregates:orderBy"
-            )
-          ) {
-            continue;
-          }
+
+          // Register the enum type - it will be empty if no attributes/aggregates
+          // have orderBy enabled, and isValidEnum will filter it out from the schema
           build.registerEnumType(
             inflection.aggregateGroupedAggregatesOrderByType({ resource }),
             {
@@ -124,14 +122,6 @@ const Plugin: GraphileConfig.Plugin = {
           !resource ||
           resource.parameters ||
           !resource.codec.attributes
-        ) {
-          return values;
-        }
-        if (
-          !build.behavior.pgResourceMatches(
-            resource,
-            "resource:groupedAggregates:orderBy"
-          )
         ) {
           return values;
         }
@@ -223,14 +213,17 @@ const Plugin: GraphileConfig.Plugin = {
             ) {
               continue;
             }
+
+            // Check if this specific aggregate's orderBy is enabled for this attribute
             if (
               !build.behavior.pgCodecAttributeMatches(
                 [resource.codec, attributeName],
-                "attribute:aggregate:groupedAggregates:orderBy"
+                `${aggregateSpec.id}:attribute:aggregate:groupedAggregates:orderBy`
               )
             ) {
               continue;
             }
+
             if (
               (aggregateSpec.shouldApplyToEntity &&
                 !aggregateSpec.shouldApplyToEntity({

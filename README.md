@@ -478,6 +478,16 @@ appearing on a table's connections.
 The `groupedAggregates` behavior is used to enable/disable the
 'groupedAggregates' field appearing on a table's connections.
 
+The `groupedAggregates:orderBy` behavior (available at both resource and
+attribute level) is used to enable/disable the `orderBy` argument on the
+'groupedAggregates' field. This is **disabled by default** as it adds 18 enum
+values per aggregatable attribute (2 directions × 9 aggregate types), which can
+cause significant schema bloat with many aggregatable attributes. You can
+further scope these, for example adding the behavior
+`+sum:attribute:aggregate:groupedAggregates:orderBy` to a specific column would
+enable ordering groupedAggregates by the `sum` aggregate of this column whilst
+leaving all other aggregates disabled.
+
 The `having` behavior is used to enable/disable the `having` filter on the
 'groupedAggregates' field appearing on a table's connections.
 
@@ -512,6 +522,24 @@ Enable aggregates for a specific table:
 
 ```sql
 COMMENT ON TABLE my_schema.my_table IS E'@behavior +aggregates +aggregates:filterBy +aggregates:orderBy';
+```
+
+Enable `groupedAggregates` orderBy for a specific table:
+
+```sql
+COMMENT ON TABLE my_schema.my_table IS E'@behavior +resource:groupedAggregates:orderBy';
+```
+
+Or enable it only for specific columns:
+
+```sql
+COMMENT ON COLUMN my_schema.my_table.my_column IS E'@behavior +attribute:aggregate:groupedAggregates:orderBy';
+```
+
+Or enable only specific aggregates for a column (e.g., only SUM and AVERAGE):
+
+```sql
+COMMENT ON COLUMN my_schema.my_table.my_column IS E'@behavior +sum:attribute:aggregate:groupedAggregates:orderBy +average:attribute:aggregate:groupedAggregates:orderBy';
 ```
 
 You also can keep aggregates enabled by default, but disable aggregates for
