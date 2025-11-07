@@ -6,18 +6,18 @@ exports[`GroupedAggregatesOrderBy: result 1`] = `
     "top": [
       {
         "keys": [
-          "5",
-        ],
-        "sum": {
-          "points": "2834",
-        },
-      },
-      {
-        "keys": [
           "1",
         ],
         "sum": {
           "points": "2175",
+        },
+      },
+      {
+        "keys": [
+          "2",
+        ],
+        "sum": {
+          "points": "1771",
         },
       },
     ],
@@ -32,7 +32,7 @@ exports[`GroupedAggregatesOrderBy: sql 1`] = `
   __match_stats__."player_id"::text as "1"
 from "test"."match_stats" as __match_stats__
 group by __match_stats__."player_id"
-order by coalesce(sum(__match_stats__."points"), '0') desc
+order by __match_stats__."player_id" asc, coalesce(sum(__match_stats__."points"), '0') desc
 limit 2;",
 ]
 `;

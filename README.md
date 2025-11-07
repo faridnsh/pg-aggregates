@@ -274,11 +274,13 @@ below for details on how to add your own grouping derivatives.
 The `groupedAggregates` field accepts a few arguments in addition to `groupBy`:
 
 - `orderBy` – controls how groups are sorted. You can order by any aggregate that
-  appears in the grouped output (e.g. `SUM_POINTS_DESC`).
+  appears in the grouped output (e.g. `SUM_POINTS_DESC`). If not specified, results
+  are ordered by the `groupBy` columns in ascending order for deterministic results.
 - `first` – limit the results to only the first `n` groups.
 
-Always pair `first` with an explicit `orderBy` so PostgreSQL can
-deterministically rank the groups before limiting them.
+When using `first`, consider specifying an explicit `orderBy` to control which groups
+are returned (e.g., top performers by sum). Without `orderBy`, groups are ordered by
+their `groupBy` values.
 
 The aggregates supported over groups are the same as over the connection as a
 whole (see [Aggregates](#aggregates) above), but in addition you may also
