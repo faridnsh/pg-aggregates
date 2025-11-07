@@ -1,9 +1,9 @@
 import { PgAggregatesAddAggregateTypesPlugin } from "./AddAggregateTypesPlugin.js";
 import { PgAggregatesAddConnectionAggregatesPlugin } from "./AddConnectionAggregatesPlugin.js";
 import { PgAggregatesAddConnectionGroupedAggregatesPlugin } from "./AddConnectionGroupedAggregatesPlugin.js";
-import { PgAggregatesAddGroupedAggregatesOrderByPlugin } from "./AddGroupedAggregatesOrderByPlugin.js";
 import { PgAggregatesAddGroupByAggregateEnumsPlugin } from "./AddGroupByAggregateEnumsPlugin.js";
 import { PgAggregatesAddGroupByAggregateEnumValuesForAttributesPlugin } from "./AddGroupByAggregateEnumValuesForAttributesPlugin.js";
+import { PgAggregatesAddGroupedAggregatesOrderByPlugin } from "./AddGroupedAggregatesOrderByPlugin.js";
 import { PgAggregatesAddHavingAggregateTypesPlugin } from "./AddHavingAggregateTypesPlugin.js";
 import { PgAggregatesSpecsPlugin } from "./AggregateSpecsPlugin.js";
 import { PgAggregatesSmartTagsPlugin } from "./AggregatesSmartTagsPlugin.js";

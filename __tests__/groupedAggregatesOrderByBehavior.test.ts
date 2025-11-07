@@ -1,9 +1,10 @@
+import type { GraphQLEnumType } from "graphql";
 import { Pool } from "pg";
 import { makeSchema } from "postgraphile";
 import { makePgService } from "postgraphile/adaptors/pg";
-import type { GraphQLEnumType } from "graphql";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
 import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connection-filter";
+
 import { PgAggregatesPreset } from "../dist/index.js";
 
 let pool: Pool | undefined;

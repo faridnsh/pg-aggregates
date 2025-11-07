@@ -154,7 +154,8 @@ const Plugin: GraphileConfig.Plugin = {
                     []
                   ),
                 },
-                ...(TableGroupedOrderByType && isValidEnum(build, TableGroupedOrderByType)
+                ...(TableGroupedOrderByType &&
+                isValidEnum(build, TableGroupedOrderByType)
                   ? {
                       orderBy: {
                         type: new GraphQLList(
@@ -186,11 +187,7 @@ const Plugin: GraphileConfig.Plugin = {
                   ),
                   applyPlan: EXPORTABLE(
                     () =>
-                      function (
-                        _$parent,
-                        $pgSelect: PgSelectStep<any>,
-                        arg
-                      ) {
+                      function (_$parent, $pgSelect: PgSelectStep<any>, arg) {
                         $pgSelect.setFirst(arg.getRaw());
                       },
                     []

@@ -51,7 +51,8 @@ export async function getSchema() {
     ],
     schema: {
       // Opt-in to orderBy for grouped aggregates in tests
-      defaultBehavior: "+resource:groupedAggregates:orderBy +attribute:aggregate:groupedAggregates:orderBy",
+      defaultBehavior:
+        "+resource:groupedAggregates:orderBy +attribute:aggregate:groupedAggregates:orderBy",
     },
   };
   return await makeSchema(preset);

@@ -1,12 +1,8 @@
-import type {
-  PgCodecAttribute,
-  PgResource,
-  PgSelectQueryBuilder,
-} from "@dataplan/pg";
+import type { PgCodecAttribute, PgSelectQueryBuilder } from "@dataplan/pg";
 import type { GraphQLEnumValueConfigMap } from "graphql";
 
-import type { AggregateSpec } from "./interfaces.js";
 import { EXPORTABLE } from "./EXPORTABLE.js";
+import type { AggregateSpec } from "./interfaces.js";
 
 const { version } = require("../package.json");
 
@@ -108,12 +104,7 @@ const Plugin: GraphileConfig.Plugin = {
       },
 
       GraphQLEnumType_values(values, build, context) {
-        const {
-          extend,
-          inflection,
-          sql,
-          pgAggregateSpecs,
-        } = build;
+        const { extend, inflection, sql, pgAggregateSpecs } = build;
         const {
           scope: { isPgAggregateGroupedOrderByEnum, pgTypeResource: resource },
         } = context;
@@ -149,11 +140,11 @@ const Plugin: GraphileConfig.Plugin = {
             EXPORTABLE(
               (
                 aggregateSpec,
-                attributeName,
                 attributeCodec,
+                attributeName,
+                direction,
                 sql,
-                targetCodec,
-                direction
+                targetCodec
               ) =>
                 function apply($pgSelect: PgSelectQueryBuilder) {
                   const fragment = aggregateSpec.sqlAggregateWrap(
@@ -168,11 +159,11 @@ const Plugin: GraphileConfig.Plugin = {
                 },
               [
                 aggregateSpec,
-                attributeName,
                 attributeCodec,
+                attributeName,
+                direction,
                 sql,
                 targetCodec,
-                direction,
               ]
             );
 

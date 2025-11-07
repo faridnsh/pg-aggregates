@@ -273,14 +273,15 @@ below for details on how to add your own grouping derivatives.
 
 The `groupedAggregates` field accepts a few arguments in addition to `groupBy`:
 
-- `orderBy` – controls how groups are sorted. You can order by any aggregate that
-  appears in the grouped output (e.g. `SUM_POINTS_DESC`). If not specified, results
-  are ordered by the `groupBy` columns in ascending order for deterministic results.
+- `orderBy` – controls how groups are sorted. You can order by any aggregate
+  that appears in the grouped output (e.g. `SUM_POINTS_DESC`). If not specified,
+  results are ordered by the `groupBy` columns in ascending order for
+  deterministic results.
 - `first` – limit the results to only the first `n` groups.
 
-When using `first`, consider specifying an explicit `orderBy` to control which groups
-are returned (e.g., top performers by sum). Without `orderBy`, groups are ordered by
-their `groupBy` values.
+When using `first`, consider specifying an explicit `orderBy` to control which
+groups are returned (e.g., top performers by sum). Without `orderBy`, groups are
+ordered by their `groupBy` values.
 
 The aggregates supported over groups are the same as over the connection as a
 whole (see [Aggregates](#aggregates) above), but in addition you may also
@@ -541,8 +542,8 @@ COMMENT ON COLUMN my_schema.my_table.my_column IS E'@behavior -attribute:aggrega
 ```
 
 Note: When using per-aggregate behaviors, you must first disable the generic
-`attribute:aggregate:groupedAggregates:orderBy` behavior to prevent all aggregates
-from being enabled.
+`attribute:aggregate:groupedAggregates:orderBy` behavior to prevent all
+aggregates from being enabled.
 
 You also can keep aggregates enabled by default, but disable aggregates for
 specific tables:
