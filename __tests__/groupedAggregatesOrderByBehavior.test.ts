@@ -108,11 +108,56 @@ describe("GroupedAggregates OrderBy Behavior", () => {
     }
   });
 
-  // Note: This implementation supports two levels of control:
-  // 1. Resource-level: +resource:groupedAggregates:orderBy (enables for all attributes)
-  // 2. Attribute-level: +attribute:aggregate:groupedAggregates:orderBy (enables for specific attribute)
-  //
-  // Aggregate-specific behaviors (e.g., sum-only, average-only) are not currently supported
-  // due to complexity in the behavior matching algorithm. If needed in the future, this could
-  // be implemented by checking behaviors at the resource level rather than attribute level.
+  it("should support per-aggregate opt-in (sum only)", async () => {
+    const { schema } = await getSchemaWithBehavior(
+      "-attribute:aggregate:groupedAggregates:orderBy +sum:attribute:aggregate:groupedAggregates:orderBy"
+    );
+    const matchStatOrderByType = schema.getType(
+      "MatchStatGroupedAggregatesOrderBy"
+    ) as GraphQLEnumType | undefined;
+
+    expect(matchStatOrderByType).toBeDefined();
+    if (matchStatOrderByType) {
+      const values = matchStatOrderByType.getValues();
+      const valueNames = values.map((v) => v.name);
+
+      // Should have SUM values
+      expect(valueNames).toContain("SUM_POINTS_ASC");
+      expect(valueNames).toContain("SUM_POINTS_DESC");
+      expect(valueNames).toContain("SUM_GOALS_ASC");
+
+      // Should NOT have AVERAGE, MIN, MAX, etc.
+      expect(valueNames).not.toContain("AVERAGE_POINTS_ASC");
+      expect(valueNames).not.toContain("MIN_POINTS_ASC");
+      expect(valueNames).not.toContain("MAX_POINTS_ASC");
+    }
+  });
+
+  it("should support multiple per-aggregate opt-ins (sum and average)", async () => {
+    const { schema } = await getSchemaWithBehavior(
+      "-attribute:aggregate:groupedAggregates:orderBy +sum:attribute:aggregate:groupedAggregates:orderBy +average:attribute:aggregate:groupedAggregates:orderBy"
+    );
+    const matchStatOrderByType = schema.getType(
+      "MatchStatGroupedAggregatesOrderBy"
+    ) as GraphQLEnumType | undefined;
+
+    expect(matchStatOrderByType).toBeDefined();
+    if (matchStatOrderByType) {
+      const values = matchStatOrderByType.getValues();
+      const valueNames = values.map((v) => v.name);
+
+      // Should have SUM values
+      expect(valueNames).toContain("SUM_POINTS_ASC");
+      expect(valueNames).toContain("SUM_GOALS_DESC");
+
+      // Should have AVERAGE values
+      expect(valueNames).toContain("AVERAGE_POINTS_ASC");
+      expect(valueNames).toContain("AVERAGE_GOALS_DESC");
+
+      // Should NOT have MIN, MAX, etc.
+      expect(valueNames).not.toContain("MIN_POINTS_ASC");
+      expect(valueNames).not.toContain("MAX_POINTS_ASC");
+      expect(valueNames).not.toContain("STDDEV_SAMPLE_POINTS_ASC");
+    }
+  });
 });
